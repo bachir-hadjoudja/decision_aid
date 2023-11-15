@@ -1,0 +1,61 @@
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f3f2f8;
+  color: #5e548e;
+}
+
+.wrapper {
+  box-shadow: 0 4px 8px 0 rgba(102, 51, 153, 0.2);
+  border-radius: 0.5rem;
+  background-color: white;
+  overflow: hidden;
+}
+
+.form-container {
+  padding: 2rem;
+  background-color: #5e548e;
+  color: white;
+}
+
+.form-container h1 {
+  margin-bottom: 1.5rem;
+}
+
+input {
+  border: 2px solid #5e548e;
+  background-color: #efe9f4;
+  color: #5e548e;
+}
+
+button {
+  background-color: #9d7cbf;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  margin-top: 1rem;
+  transition: background-color 0.2s;
+}
+
+button:hover, button:focus {
+  background-color: #7a5299;
+  outline: none;
+}
+
+.results-container {
+  padding: 2rem;
+}
+
+.result-block {
+  background-color: #efe9f4;
+  border-left: 5px solid #9d7cbf;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+}
+
+pre {
+  background-color: white;
+  border: 1px solid #ccc;
+  color: #5e548e;
+}
+
+

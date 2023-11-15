@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Mariage Stable</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="form-container">
+    <h1>Configuration du Mariage Stable</h1>
+    <input type="number" id="nbEtudiants" placeholder="Nombre d'étudiants" value="4" min="1">
+    <input type="number" id="nbEtablissements" placeholder="Nombre d'établissements" value="4" min="1">
+    <button onclick="genererPreferences()">Générer les préférences</button>
+    <button onclick="executerMariageStable()">Exécuter le mariage stable</button>
+  </div>
+  
+  <div class="results-container">
+    <h2>Résultats</h2>
+    <div class="result-block">
+      <h3>Préférences des étudiants:</h3>
+      <pre id="resultEtudiants"></pre>
+    </div>
+    <div class="result-block">
+      <h3>Préférences des établissements:</h3>
+      <pre id="resultEtablissements"></pre>
+    </div>
+    <div class="result-block">
+      <h3>Résultat du mariage stable:</h3>
+      <pre id="resultMariageStable"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+    function genererPreferences() {
+      const nbEtudiants = parseInt(document.getElementById('nbEtudiants').value, 10);
+      const nbEtablissements = parseInt(document.getElementById('nbEtablissements').value, 10);
+
+      const preferencesEtudiants = {};
+      const preferencesEtablissements = {};
+
+      for (let etudiant = 0; etudiant < nbEtudiants; etudiant++) {
+        preferencesEtudiants[etudiant] = Array.from({ length: nbEtablissements }, (_, i) => i).join(', ');
+      }
+
+      for (let etablissement = 0; etablissement < nbEtablissements; etablissement++) {
+        preferencesEtablissements[etablissement] = Array.from({ length: nbEtudiants }, (_, i) => i).join(', ');
+      }
+
+      document.getElementById('resultEtudiants').textContent = JSON.stringify(preferencesEtudiants, null, 2);
+      document.getElementById('resultEtablissements').textContent = JSON.stringify(preferencesEtablissements, null, 2);
+    }
+
+    function executerMariageStable() {
+      // Implémente ici la logique de mariage stable en utilisant les préférences générées
+      // Enregistre le résultat dans la variable resultatMariageStable
+
+      const resultatMariageStable = { 0: 1, 1: 0, 2: 3, 3: 2 };
+
+      document.getElementById('resultMariageStable').textContent = JSON.stringify(resultatMariageStable, null, 2);
+    }
+  </script>
+
+<script src="script.js"></script>
+</body>
+</html>
