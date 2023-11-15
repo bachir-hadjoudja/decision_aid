@@ -7,7 +7,7 @@ def generer_preferences(keys, values):
     return preferences
 
 # Gale-Shapley
-def mariage_stable(etudiants_pref, etablissements_pref):
+def gale_shapley(etudiants_pref, etablissements_pref):
 
     etudiants_libres = list(etudiants_pref.keys())
     print(etudiants_libres)
@@ -43,8 +43,17 @@ etablissements_pref = generer_preferences(nb_etablissements, nb_etudiants)
 print("Pref des étudiants:", etudiants_pref)
 print("Pref des établissements:", etablissements_pref)
 
-#couplage = mariage_stable(etudiants_pref, etablissements_pref)
-couplage = mariage_stable({0: [2, 1, 4, 5, 3, 0], 1: [3, 4, 2, 1, 5, 0], 2: [3, 1, 0, 5, 2, 4], 3: [0, 1, 3, 5, 2, 4]},
-                           {0: [0, 2, 1, 3], 1: [2, 1, 0, 3], 2: [3, 0, 1, 2], 3: [3, 1, 2, 0], 4: [1, 0, 3, 2], 5: [1, 2, 0, 3]})
 
+couplage = gale_shapley(etudiants_pref, etablissements_pref)
 print("Mariage stable final:", couplage)
+
+
+#######TODO : choix de metrique :
+####TODO satisfaction pondérée: chaque choix d'un étudiant a un poids, par ex le premier : 1 le deuxième : 0.75 le troisième : 0.5 ... et selon le choix attribué, on multiplie
+# fois le poids associé, et on divise sur la somme des poids totaux (genre 1+1+1+1+1+1..)
+####TODO calcul de la distance : la distance entre le choix obtenu et le meilleur choix (premier choix)
+####TODO Variance de la satisfaction : Calculer la variance ou l'écart-type des scores de satisfaction pour évaluer l'équité du couplage. 
+# Une faible variance indiquerait une distribution plus équitable de la satisfaction.
+####TODO Approche utilitariste vs égalitariste : L’approche utilitariste maximiserait la satisfaction totale, tandis que l’approche égalitariste chercherait à égaliser la satisfaction autant que possible. 
+#Vous pouvez implémenter les deux et comparer les résultats.
+
