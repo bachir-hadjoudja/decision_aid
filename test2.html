@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mariage Stable</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-size: cover;
+      background-position: center;
+      background-image: url('/home/bachir/Bureau/M2 IASD/HAI902I Aide à la décision/interface/fds_3d.webp');
+      background-size: cover;
+      background-position: center;
+      color: #333;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-image: url('/home/bachir/Bureau/M2 IASD/HAI902I Aide à la décision/interface/fds_3d.webp');
+      background-size: cover;
+      background-position: center;
+      filter: blur(5px);
+      z-index: -1;
+    }
+
+    body {
+      position: relative;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #1a237e;
+      margin-bottom: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #5c6bc0;
+      color: white;
+      padding: 10px 15px;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #3949ab;
+    }
+
+    pre {
+      background-color: #e3f2fd;
+      padding: 10px;
+      border-left: 4px solid #1e88e5;
+      overflow: auto;
+    }
+
+    .flex-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .preferences {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 10px;
+      width: 45%;
+      overflow: auto;
+    }
+
+    .preferences pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    /* Styles pour le tableau */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #e1f5fe;
+    }
+
+    
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Paramètres</h2>
+    <div class="form-group">
+      <label for="nbEtudiants">Nombre d'étudiants:</label>
+      <input type="number" id="nbEtudiants" value="4">
+    </div>
+
+    <div class="form-group">
+      <label for="nbEtablissements">Nombre d'établissements:</label>
+      <input type="number" id="nbEtablissements" value="3">
+    </div>
+
+    <div class="form-group">
+      <div class="btn" onclick="genererPreferences()">Générer les préférences</div>
+      <div class="btn" onclick="executerMariageStable()">Exécuter le mariage stable</div>
+      <div class="btn" onclick="calculerMoyenne()">Calculer la moyenne et la ratio</div>
+      <!-- div class="btn" onclick="calculerRatio()">Calculer le ratio</div -->
+      <!-- Nouveau bouton pour calculer le ratio -->
+      <div class="btn" onclick="analyserUtilitariste()">Analyse Utilitariste</div>
+
+      <div class="btn" onclick="analyserEgalitaristeVariance()">Analyse Égalitariste Variance</div>
+      <div class="btn" onclick="analysePondereeFinale()">Analyse Pondérée</div>
+    </div>
+  </div>
+
+  <div class="flex-container">
+    <div class="preferences">
+      <h2>Préférences des Étudiants</h2>
+      <pre id="resultEtudiants"></pre>
+    </div>
+    <div class="preferences">
+      <h2>Préférences des Établissements</h2>
+      <pre id="resultEtablissements"></pre>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Résultats</h2>
+    <div>
+      <h3>Résultat du mariage stable :</h3>
+      <pre id="resultMariageStable"></pre>
+    </div>
+    <div>
+      <h3>Moyenne des distances :</h3>
+      <p id="resultMoyenneDistancesEtudiants"></p>
+      <p id="resultMoyenneDistancesEtablissements"></p>
+    </div>
+    <div>
+      <h3>Ratio de satisfaction :</h3>
+      <p id="resultRatioSatisfactionEtudiants"></p>
+      <p id="resultRatioSatisfactionEtablissements"></p>
+    </div>
+
+    <div>
+      <h3>Résultats de l'analyse utilitariste :</h3>
+      <p id="resultAnalyseUtilitaristeEtudiants"></p>
+      <p id="resultAnalyseUtilitaristeEtablissements"></p>
+    </div>
+
+    <div>
+      <h3>Résultats de l'analyse égalitariste avec variance :</h3>
+      <p id="resultAnalyseEgalitaristeVarianceEtudiants"></p>
+      <p id="resultAnalyseEgalitaristeVarianceEtablissements"></p>
+    </div>
+    <div>
+      <h3>Résultats de l'analyse pondérée :</h3>
+      <p id="resultPondereeStudent"></p>
+      <p id="resultPondereeEtablissement"></p>
+    </div>
+
+
+  </div>
+
+  <script>
+    function genererPreferences() {
+      var nbEtudiants = parseInt(document.getElementById('nbEtudiants').value);
+      var nbEtablissements = parseInt(document.getElementById('nbEtablissements').value);
+
+      // Vérification si le nombre d'établissements est inférieur au nombre d'étudiants
+      if (nbEtablissements < nbEtudiants) {
+        alert("Attention : Le nombre d'établissements doit être au moins égal au nombre d'étudiants.");
+        return; // Arrête l'exécution de la fonction si la condition est vraie
+      }
+      var etudiantsPref = [];
+      var etablissementsPref = [];
+
+      for (let i = 0; i < nbEtudiants; i++) {
+        etudiantsPref[i] = [];
+        while (etudiantsPref[i].length < nbEtablissements) {
+          var r = Math.floor(Math.random() * nbEtablissements);
+          if (etudiantsPref[i].indexOf(r) === -1) etudiantsPref[i].push(r);
+        }
+      }
+
+      for (let i = 0; i < nbEtablissements; i++) {
+        etablissementsPref[i] = [];
+        while (etablissementsPref[i].length < nbEtudiants) {
+          var r = Math.floor(Math.random() * nbEtudiants);
+          if (etablissementsPref[i].indexOf(r) === -1) etablissementsPref[i].push(r);
+        }
+      }
+
+      var etudiantsPrefText = JSON.stringify(etudiantsPref).replace(/\s+/g, ' ');
+      var etablissementsPrefText = JSON.stringify(etablissementsPref).replace(/\s+/g, ' ');
+
+      document.getElementById('resultEtudiants').textContent = etudiantsPrefText;
+      document.getElementById('resultEtablissements').textContent = etablissementsPrefText;
+    }
+
+    function executerMariageStable(etudiantsPreff, etablissementsPreff) {
+      var etudiantsPref = JSON.parse(document.getElementById('resultEtudiants').textContent);
+      var etablissementsPref = JSON.parse(document.getElementById('resultEtablissements').textContent);
+      var etudiantsLibres = Array.from({ length: etudiantsPref.length }, (_, i) => i);
+      var couplage = {};
+
+      while (etudiantsLibres.length > 0) {
+        var etudiant = etudiantsLibres.shift();
+        var preferencesEtudiant = etudiantsPref[etudiant];
+
+        for (const etablissement of preferencesEtudiant) {
+          if (!(etablissement in couplage)) {
+            couplage[etablissement] = etudiant;
+            break;
+          } else {
+            var etudiantCouple = couplage[etablissement];
+
+            if (etablissementsPref[etablissement].indexOf(etudiant) < etablissementsPref[etablissement].indexOf(etudiantCouple)) {
+              etudiantsLibres.push(etudiantCouple);
+              couplage[etablissement] = etudiant;
+              break;
+            }
+          }
+        }
+      }
+
+      console.log("Couplage brut :", couplage);
+      var affectationsText = JSON.stringify(couplage, null, 2);
+
+      //document.getElementById('resultMariageStable').innerHTML = affectationsText;
+      afficherResultatsMariageStable(couplage);
+      return couplage;
+    }
+    function calculerMoyenne() {
+      var etudiantsPref = JSON.parse(document.getElementById('resultEtudiants').textContent);
+      var etablissementsPref = JSON.parse(document.getElementById('resultEtablissements').textContent);
+
+      var resultMariageStable = executerMariageStable(etudiantsPref, etablissementsPref);
+
+      var [moyenneEtablissements, moyenneStudents] = analyseMoyenne(resultMariageStable, etudiantsPref, etablissementsPref);
+      var [ratioEtablissements, ratioStudents] = analyseRatioSatisfaction(resultMariageStable, etudiantsPref, etablissementsPref);
+
+      document.getElementById('resultMoyenneDistancesEtudiants').textContent = "Moyenne des distances des étudiants : " + moyenneStudents.toFixed(2);
+      document.getElementById('resultMoyenneDistancesEtablissements').textContent = "Moyenne des distances des établissements : " + moyenneEtablissements.toFixed(2);
+      document.getElementById('resultRatioSatisfactionEtudiants').textContent = "Ratio de satisfaction des étudiants: " + ratioStudents.toFixed(2);
+      document.getElementById('resultRatioSatisfactionEtablissements').textContent = "Ratio de satisfaction des établissements: " + ratioEtablissements.toFixed(2);
+    }
+
+
+    function analyseMoyenne(stableMatches, etudiantsPref, etablissementsPref) {
+      let studentMatch = Object.entries(stableMatches);
+      let distanceStudent = 0;
+      let distanceEtablissement = 0;
+
+      for (let [s, p] of studentMatch) {
+        let pPreferences = etablissementsPref[p];
+        let sPreferences = etudiantsPref[s];
+
+
+        let assignedEtablissement = sPreferences.indexOf(parseInt(p)) + 1;
+        let assignedStudent = pPreferences.indexOf(parseInt(s)) + 1;
+
+
+        distanceStudent += assignedEtablissement;
+        distanceEtablissement += assignedStudent;
+      }
+      console.log("distanceStudent", distanceStudent);
+      console.log("distanceEtablissement", distanceEtablissement);
+
+      let moyenneStudents = (distanceStudent / studentMatch.length);
+      let moyenneEtablissements = (distanceEtablissement / studentMatch.length);
+
+      return [moyenneEtablissements, moyenneStudents];
+    }
+
+
+
+
+    function analyseRatioSatisfaction(stableMatches, studentsPreferences, etablissementsPreferences) {
+      let proposerMatch = Object.entries(stableMatches);
+      let studentMatch = proposerMatch.map(([p, s]) => [s, p]); // Inverser les paires pour obtenir les matchs des étudiants
+
+      let assignedStudent = 0;
+      let PireDistanceStudent = 0;
+      let assignedEtablissement = 0;
+      let PireDistanceEtablissement = 0;
+
+      proposerMatch.forEach(([s, p]) => {
+        assignedStudent += etablissementsPreferences[p].indexOf(parseInt(s)) + 1;
+        PireDistanceStudent += etablissementsPreferences[p].length;
+        assignedEtablissement += studentsPreferences[s].indexOf(p) + 1;
+        PireDistanceEtablissement += studentsPreferences[s].length;
+      });
+
+      let ratioEtablissements = 1 - (assignedStudent / PireDistanceStudent);
+      let ratioStudents = 1 - (assignedEtablissement / PireDistanceEtablissement);
+
+      return [ratioEtablissements, ratioStudents];
+    }
+
+    function analyserUtilitariste() {
+      var etudiantsPref = JSON.parse(document.getElementById('resultEtudiants').textContent);
+      var etablissementsPref = JSON.parse(document.getElementById('resultEtablissements').textContent);
+      var resultMariageStable = executerMariageStable(etudiantsPref, etablissementsPref);
+
+
+      var [utilitaristeEtablissements, utilitaristeEtudiants] = analyseUtilitariste(resultMariageStable, etudiantsPref, etablissementsPref);
+      document.getElementById('resultAnalyseUtilitaristeEtudiants').textContent = "Ratio premier choix étudiants / total étudiants : " + utilitaristeEtudiants.toFixed(2);
+      document.getElementById('resultAnalyseUtilitaristeEtablissements').textContent = "Ratio premier choix établissements / total établissements : " + utilitaristeEtablissements.toFixed(2);
+
+    }
+
+    function analyseUtilitariste(stableMatches, etudiantsPref, etablissementsPref) {
+      var proposerMatch = stableMatches;
+      var proposerFirstChoice = 0;
+      var studentFirstChoice = 0;
+
+      for (var s in proposerMatch) {
+        var p = proposerMatch[s];
+
+        if (s in etudiantsPref && p in etablissementsPref) {
+          var sPreferences = etudiantsPref[s];
+          var pPreferences = etablissementsPref[p];
+
+          if (proposerMatch[s] == sPreferences[0]) {
+            studentFirstChoice++;
+          }
+
+          var etudiantPourEtablissementP = null;
+          for (var etudiant in proposerMatch) {
+            if (proposerMatch[etudiant] === p) {
+              etudiantPourEtablissementP = etudiant;
+              break;
+            }
+          }
+
+          if (etudiantPourEtablissementP != null && etudiantPourEtablissementP == pPreferences[0]) {
+            proposerFirstChoice++;
+          }
+        }
+      }
+
+      var ratioStudents = studentFirstChoice / Object.keys(etudiantsPref).length;
+      var ratioEtablissements = proposerFirstChoice / Object.keys(etablissementsPref).length;
+      console.log(etablissementsPref);
+
+
+
+      //console.log(resultText);
+      return [ratioEtablissements, ratioStudents];
+    }
+
+
+    function analyserEgalitaristeVariance() {
+      var etudiantsPref = JSON.parse(document.getElementById('resultEtudiants').textContent);
+      var etablissementsPref = JSON.parse(document.getElementById('resultEtablissements').textContent);
+      var resultMariageStable = executerMariageStable(etudiantsPref, etablissementsPref);
+
+      var [varianceProposers, varianceStudents] = analyseEgalitaristeVariance(resultMariageStable, etudiantsPref, etablissementsPref);
+      document.getElementById('resultAnalyseEgalitaristeVarianceEtudiants').textContent = "Variance des distances pour les étudiants : " + varianceStudents.toFixed(2);
+      document.getElementById('resultAnalyseEgalitaristeVarianceEtablissements').textContent = "Variance des distances pour les établissements : " + varianceProposers.toFixed(2);
+
+    }
+
+    function analyseEgalitaristeVariance(stableMatches, etudiantsPref, etablissementsPref) {
+      var distancesProposers = [];
+      var distancesStudents = [];
+
+      var proposerMatch = stableMatches;
+      var studentMatch = Object.keys(stableMatches).reduce(function (obj, key) {
+        obj[stableMatches[key]] = key;
+        return obj;
+      }, {});
+
+      for (var s in proposerMatch) {
+        var p = proposerMatch[s];
+
+        var sPreferences = etudiantsPref[s];
+        var pPreferences = etablissementsPref[p];
+
+
+        var proposerDistance = pPreferences.indexOf(parseInt(s)) + 1;
+        var studentDistance = sPreferences.indexOf(parseInt(p)) + 1;
+
+        distancesProposers.push(proposerDistance);
+        distancesStudents.push(studentDistance);
+      }
+
+      // Calcul des moyennes pour chaque groupe
+      var moyenneProposers = distancesProposers.reduce(function (acc, val) { return acc + val; }, 0) / distancesProposers.length;
+      var moyenneStudents = distancesStudents.reduce(function (acc, val) { return acc + val; }, 0) / distancesStudents.length;
+
+      // Calcul des variances pour chaque groupe
+      var varianceProposers = distancesProposers.reduce(function (acc, val) { return acc + Math.pow((val - moyenneProposers), 2); }, 0) / distancesProposers.length;
+      var varianceStudents = distancesStudents.reduce(function (acc, val) { return acc + Math.pow((val - moyenneStudents), 2); }, 0) / distancesStudents.length;
+      return [varianceProposers, varianceStudents];
+    }
+
+
+
+    function calculerPoids(rang, nombreTotal) {
+      // Exemple : poids décroissant linéairement
+      return 1 - (rang - 1) / nombreTotal;
+    }
+
+    function analysePondereeFinale() {
+      var etudiantsPref = JSON.parse(document.getElementById('resultEtudiants').textContent);
+      var etablissementsPref = JSON.parse(document.getElementById('resultEtablissements').textContent);
+      var resultMariageStable = executerMariageStable(etudiantsPref, etablissementsPref);
+
+      var [poidsProposer, poidsStudent] = analysePonderee(resultMariageStable, etudiantsPref, etablissementsPref);
+      document.getElementById('resultPondereeStudent').textContent = "Poids pondérée pour les étudiants : " + poidsStudent.toFixed(2);
+      document.getElementById('resultPondereeEtablissement').textContent = "Poids pondérée pour les établissements : " + poidsProposer.toFixed(2);
+
+    }
+    function analysePonderee(stableMatches, studentsPreferences, proposersPreferences) {
+
+      var proposerMatch = stableMatches;
+      var poidsTotalProposer = 0;
+      var poidsTotalStudent = 0;
+
+      for (var s in proposerMatch) {
+        var p = proposerMatch[s];
+        var pPreferences = proposersPreferences[p];
+        var sPreferences = studentsPreferences[s];
+
+        var rangProposer = pPreferences.indexOf(s) + 1;
+        var rangStudent = sPreferences.indexOf(p) + 1;
+
+        var poidsProposer = calculerPoids(rangProposer, pPreferences.length);
+        var poidsStudent = calculerPoids(rangStudent, sPreferences.length);
+
+        poidsTotalProposer += poidsProposer;
+        poidsTotalStudent += poidsStudent;
+      }
+
+      return [poidsTotalProposer, poidsTotalStudent];
+    }
+
+
+    function afficherResultatsMariageStable(couplage) {
+      var tableauHTML = "<table><tr><th>Étudiant</th><th>Établissement</th></tr>";
+      for (var etudiant in couplage) {
+        tableauHTML += "<tr><td>" + etudiant + "</td><td>" + couplage[etudiant] + "</td></tr>";
+      }
+      tableauHTML += "</table>";
+      document.getElementById('resultMariageStable').innerHTML = tableauHTML;
+    }
+
+  </script>
+
+</body>
+
+</html>
